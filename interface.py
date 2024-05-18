@@ -9,5 +9,11 @@ class Tela:
     def perguntaNomejogador2(self):
         pass
 
-    def perguntaJogada(self):
+    def perguntaJogada(self, jogador):
+        pass
+
+    def mostraJogo(self, jogo):
+        pass
+
+    def aviso(self, msg):
         pass
