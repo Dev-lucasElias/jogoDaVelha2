@@ -17,7 +17,6 @@ class ControleCentral:
         jogoPai = self.__jogo.montaJogo(jogosfilho)
         self.__telaDoJogo.mostraJogo(jogoPai)
 
-
         while True:
             #=========================  VEZ JOGADOR 1 ==========================================================
             posPaiL, posPaiC, posFilhoL, posFilhoC = self.__telaDoJogo.perguntaJogada(self.__jogador1)
