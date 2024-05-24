@@ -19,6 +19,7 @@ class Tela:
         self.__branco = (255, 255, 255)
         self.__preto = (0, 0, 0)
         self.__vermelho = (255, 0, 0)
+        self.__botoes = []
         
 
     def perguntaNomejogador1(self):
@@ -42,34 +43,26 @@ class Tela:
                 elif event.type == QUIT:
                     running = False
 
-    def perguntaJogada(self, jogador):
+    def perguntaJogada(self, jogador=None):
         while self.running:
             for event in py.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         self.running = False
+                    botao_clicado = self.checar_clique_botao(self.__botoes, event)
+                    if botao_clicado:
+                        botao_clicado.atualizar(event)
+
+
 
                 elif event.type == QUIT:
                     self.running = False
-
     def mostraJogo(self, jogo = None):
         widhtPai = 600
         heightPai = 600
         offset_x = (self.widthScreen - widhtPai) // 2
         offset_y = (self.heightScreen - heightPai) // 2
-        py.draw.line(self.__screen, self.__preto, (offset_x, offset_y + int(widhtPai/3)), (offset_x + heightPai, offset_y + widhtPai/3), 5)
-        py.draw.line(self.__screen, self.__preto, (offset_x, offset_y + (widhtPai/3)*2), (offset_x + heightPai, offset_y + (widhtPai/3)*2), 5)
-        py.draw.line(self.__screen, self.__preto, (offset_x + (heightPai/3) , offset_y), (offset_x+(heightPai/3), offset_y+widhtPai), 5)
-        py.draw.line(self.__screen, self.__preto, (offset_x+(heightPai/3)*2, offset_y), (offset_x+(heightPai/3)*2, offset_y + widhtPai), 5)
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, 0))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, int(widhtPai/3)))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, int((widhtPai/3)*2)))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), 0))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), int(widhtPai/3)))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), int((widhtPai/3)*2)))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), 0))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), int(widhtPai/3)))
-        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), int((widhtPai/3)*2)))
+        self.__screen.blit(self.montaTabuleiroPai(widhtPai,heightPai), (offset_x, offset_y))
         py.display.flip()
         while self.running:
             for event in py.event.get():
@@ -86,22 +79,42 @@ class Tela:
     def montaTabuleirofilho(self,width, height):
         tabuleiro_filho = py.Surface((width,height))
         tabuleiro_filho.fill(self.__branco)
-        py.draw.line(tabuleiro_filho, self.__preto, (0,int(width/3)), (height,int(width/3)), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, (0,(int(width/3)*2)), (height,int((width/3)*2)), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, (int(height/3),0), (int(height/3), width), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, (int((height/3)*2),0), (int((height/3)*2),width), 2)
-        botao11 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, 0, height/3, width/100).desenhar(tabuleiro_filho)
-        botao12 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, width/3, height/3, width/3).desenhar(tabuleiro_filho)
-        botao13 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
-        botao21 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, 0, height/3, width/3).desenhar(tabuleiro_filho)
-        botao22 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, width/3, height/3, width/3).desenhar(tabuleiro_filho)
-        botao23 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
-        botao31 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, 0, height/3, width/3).desenhar(tabuleiro_filho)
-        botao32 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, width/3, height/3, width/3).desenhar(tabuleiro_filho)
-        botao33 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
+        py.draw.line(tabuleiro_filho, self.__preto, (10,int(width/3)), (height-10,int(width/3)), 1)
+        py.draw.line(tabuleiro_filho, self.__preto, (10,(int(width/3)*2)), (height-10,int((width/3)*2)), 1)
+        py.draw.line(tabuleiro_filho, self.__preto, (int(height/3),10), (int(height/3), width-10), 1)
+        py.draw.line(tabuleiro_filho, self.__preto, (int((height/3)*2),10), (int((height/3)*2),width-10), 1)
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1, 1, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1, 1+width/3, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1, 1+(width/3)*2, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+height/3, 1, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+height/3, 1+width/3, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+height/3, 1+(width/3)*2, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+(height/3)*2, 1, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+(height/3)*2, 1+width/3, height/3-2, width/3-2))
+        self.__botoes.append(Botaojogada("-", (192,192,192), (255,255,255), self.__branco, 1+(height/3)*2, 1+(width/3)*2, height/3-2, width/3-2))
+        for i in self.__botoes:
+            i.desenhar(tabuleiro_filho)
         py.display.flip()
         return tabuleiro_filho 
-
+    
+    def montaTabuleiroPai(self,width, height):
+        tabuleiro_pai = py.Surface((width,height))
+        tabuleiro_pai.fill(self.__branco)
+        py.draw.line(tabuleiro_pai, self.__preto, (0,int(width/3)), (height,int(width/3)), 4)
+        py.draw.line(tabuleiro_pai, self.__preto, (0,(int(width/3)*2)), (height,int((width/3)*2)), 4)
+        py.draw.line(tabuleiro_pai, self.__preto, (int(height/3),0), (int(height/3), width), 4)
+        py.draw.line(tabuleiro_pai, self.__preto, (int((height/3)*2),0), (int((height/3)*2),width), 4)
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (0, 0))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (0, int(width/3)))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (0, int((width/3)*2)))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int(height/3), 0))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int(height/3), int(width/3)))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int(height/3), int((width/3)*2)))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int((height/3)*2), 0))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int((height/3)*2), int(width/3)))
+        tabuleiro_pai.blit(self.montaTabuleirofilho(int(width/3-2),int(height/3)-2), (int((height/3)*2), int((width/3)*2)))
+        py.display.flip()
+        return tabuleiro_pai
         
 class Botaojogada:
     def __init__(self, texto, cor_inativa, cor_ativa, cor_texto, x, y, largura, altura):
@@ -137,3 +150,4 @@ class Botaojogada:
 
 tela1 = Tela()
 tela1.mostraJogo()
+tela1.perguntaJogada()
