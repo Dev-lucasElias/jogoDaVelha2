@@ -16,7 +16,6 @@ class Tela:
         self.__screen.fill("white")
         py.display.flip()
         self.running = True
-        self.player1_image = py.image.load('imgjogo.png')
         self.__branco = (255, 255, 255)
         self.__preto = (0, 0, 0)
         self.__vermelho = (255, 0, 0)
@@ -56,12 +55,21 @@ class Tela:
     def mostraJogo(self, jogo = None):
         widhtPai = 600
         heightPai = 600
-        offset_x = (self.widthScreen - 600) // 2
-        offset_y = (self.heightScreen - 600) // 2
-        py.draw.line(self.__screen, self.__preto, (offset_x, offset_y + widhtPai/3), (offset_x + heightPai, offset_y + widhtPai/3), 5)
+        offset_x = (self.widthScreen - widhtPai) // 2
+        offset_y = (self.heightScreen - heightPai) // 2
+        py.draw.line(self.__screen, self.__preto, (offset_x, offset_y + int(widhtPai/3)), (offset_x + heightPai, offset_y + widhtPai/3), 5)
         py.draw.line(self.__screen, self.__preto, (offset_x, offset_y + (widhtPai/3)*2), (offset_x + heightPai, offset_y + (widhtPai/3)*2), 5)
         py.draw.line(self.__screen, self.__preto, (offset_x + (heightPai/3) , offset_y), (offset_x+(heightPai/3), offset_y+widhtPai), 5)
         py.draw.line(self.__screen, self.__preto, (offset_x+(heightPai/3)*2, offset_y), (offset_x+(heightPai/3)*2, offset_y + widhtPai), 5)
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, 0))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, int(widhtPai/3)))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (0, int((widhtPai/3)*2)))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), 0))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), int(widhtPai/3)))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int(heightPai/3), int((widhtPai/3)*2)))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), 0))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), int(widhtPai/3)))
+        self.__screen.blit(self.montaTabuleirofilho(int(widhtPai/3),int(heightPai/3)), (int((heightPai/3)*2), int((widhtPai/3)*2)))
         py.display.flip()
         while self.running:
             for event in py.event.get():
@@ -76,23 +84,24 @@ class Tela:
         pass
 
     def montaTabuleirofilho(self,width, height):
-        tabuleiro_filho = py.surface(width,height)
-        tabuleiro_filho.fill(self.branco)
-        py.draw.line(tabuleiro_filho, self.__preto, (0,width/3), (height,width/3), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, (0,(width/3)*2), (height,(width/3)*2), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, (height/3,0), (height/3, width), 2)
-        py.draw.line(tabuleiro_filho, self.__preto, ((height/3)*2,0), ((height/3)*2,width), 2)
-        botao11 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, 0, 0, height/3, width/100)
-        botao12 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, 0, width/3, height/3, width/3)
-        botao13 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, 0, (width/3)*2, height/3, width/3)
-        botao21 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, height/3, 0, height/3, width/3)
-        botao22 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, height/3, width/3, height/3, width/3)
-        botao23 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, height/3, (width/3)*2, height/3, width/3)
-        botao31 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, (height/3)*2, 0, height/3, width/3)
-        botao32 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, (height/3)*2, width/3, height/3, width/3)
-        botao33 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.branco, (height/3)*2, (width/3)*2, height/3, width/3)
-
+        tabuleiro_filho = py.Surface((width,height))
+        tabuleiro_filho.fill(self.__branco)
+        py.draw.line(tabuleiro_filho, self.__preto, (0,int(width/3)), (height,int(width/3)), 2)
+        py.draw.line(tabuleiro_filho, self.__preto, (0,(int(width/3)*2)), (height,int((width/3)*2)), 2)
+        py.draw.line(tabuleiro_filho, self.__preto, (int(height/3),0), (int(height/3), width), 2)
+        py.draw.line(tabuleiro_filho, self.__preto, (int((height/3)*2),0), (int((height/3)*2),width), 2)
+        botao11 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, 0, height/3, width/100).desenhar(tabuleiro_filho)
+        botao12 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, width/3, height/3, width/3).desenhar(tabuleiro_filho)
+        botao13 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, 0, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
+        botao21 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, 0, height/3, width/3).desenhar(tabuleiro_filho)
+        botao22 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, width/3, height/3, width/3).desenhar(tabuleiro_filho)
+        botao23 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, height/3, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
+        botao31 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, 0, height/3, width/3).desenhar(tabuleiro_filho)
+        botao32 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, width/3, height/3, width/3).desenhar(tabuleiro_filho)
+        botao33 = Botaojogada("Jogar", (100, 150, 50), (50, 100, 150), self.__branco, (height/3)*2, (width/3)*2, height/3, width/3).desenhar(tabuleiro_filho)
         py.display.flip()
+        return tabuleiro_filho 
+
         
 class Botaojogada:
     def __init__(self, texto, cor_inativa, cor_ativa, cor_texto, x, y, largura, altura):
